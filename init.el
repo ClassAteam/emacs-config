@@ -87,5 +87,11 @@
   :config
   (evil-mode 1))
 
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
 ;; Open in full-screen mode
 (toggle-frame-fullscreen)
+

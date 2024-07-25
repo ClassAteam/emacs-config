@@ -1,0 +1,1 @@
+/home/yuri/.emacs.d/straight/repos/straight.el/straight.el

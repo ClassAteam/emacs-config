@@ -1,3 +1,17 @@
+
+* TABLE OF CONTENTS :toc:
+- [[#fonts][Fonts]]
+- [[#package-manager][Package Manager]]
+- [[#minor-customizations][Minor customizations]]
+- [[#vertico-around][Vertico around]]
+- [[#evil-mode][Evil Mode]]
+  - [[#general-keybindings][General Keybindings]]
+- [[#org-mode][ORG MODE]]
+  - [[#enabling-table-of-contents][Enabling Table of Contents]]
+  - [[#enabling-org-bullets][Enabling Org Bullets]]
+  - [[#disable-electric-indent][Disable Electric Indent]]
+  - [[#source-code-block-tag-expansion][Source Code Block Tag Expansion]]
+
 * Fonts
 #+BEGIN_SRC elisp
 ;; Set the default font
@@ -118,51 +132,96 @@
 
 ** General Keybindings
 #+begin_src emacs-lisp
-(use-package general
-  :config
-  (general-evil-setup)
+  (use-package general
+    :config
+    (general-evil-setup)
 
-  ;; set up 'SPC' as the global leader key
-  (general-create-definer dt/leader-keys
-    :states '(normal insert visual emacs)
-    :keymaps 'override
-    :prefix "SPC" ;; set leader
-    :global-prefix "M-SPC") ;; access leader in insert mode
+    ;; set up 'SPC' as the global leader key
+    (general-create-definer dt/leader-keys
+      :states '(normal insert visual emacs)
+      :keymaps 'override
+      :prefix "SPC" ;; set leader
+      :global-prefix "M-SPC") ;; access leader in insert mode
 
-  (dt/leader-keys
-    "." '(find-file :wk "Find file")
-    "f c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
-    "TAB TAB" '(comment-line :wk "Comment lines"))
+    (dt/leader-keys
+      "." '(find-file :wk "Find file")
+      "f c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
+      "TAB TAB" '(comment-line :wk "Comment lines"))
 
-  (dt/leader-keys
-    "b" '(:ignore t :wk "buffer")
-    "b b" '(switch-to-buffer :wk "Switch buffer")
-    "b i" '(ibuffer :wk "Ibuffer")
-    "b k" '(kill-this-buffer :wk "Kill this buffer")
-    "b n" '(next-buffer :wk "Next buffer")
-    "b p" '(previous-buffer :wk "Previous buffer")
-    "b r" '(revert-buffer :wk "Reload buffer"))
+    (dt/leader-keys
+      "b" '(:ignore t :wk "buffer")
+      "b b" '(switch-to-buffer :wk "Switch buffer")
+      "b i" '(ibuffer :wk "Ibuffer")
+      "b k" '(kill-this-buffer :wk "Kill this buffer")
+      "b n" '(next-buffer :wk "Next buffer")
+      "b p" '(previous-buffer :wk "Previous buffer")
+      "b r" '(revert-buffer :wk "Reload buffer"))
 
-  (dt/leader-keys
-    "e" '(:ignore t :wk "Evaluate")    
-    "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
-    "e d" '(eval-defun :wk "Evaluate defun containing or after point")
-    "e e" '(eval-expression :wk "Evaluate and elisp expression")
-    "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
-    "e r" '(eval-region :wk "Evaluate elisp in region")) 
+    (dt/leader-keys
+      "e" '(:ignore t :wk "Evaluate")    
+      "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
+      "e d" '(eval-defun :wk "Evaluate defun containing or after point")
+      "e e" '(eval-expression :wk "Evaluate and elisp expression")
+      "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
+      "e r" '(eval-region :wk "Evaluate elisp in region")) 
 
-   (dt/leader-keys
-    "h" '(:ignore t :wk "Help")
-    "h f" '(describe-function :wk "Describe function")
-    "h v" '(describe-variable :wk "Describe variable")
-    "h r r" '(reload-init-file :wk "Reload emacs config"))
+     (dt/leader-keys
+      "h" '(:ignore t :wk "Help")
+      "h f" '(describe-function :wk "Describe function")
+      "h v" '(describe-variable :wk "Describe variable")
+      "h r r" '(reload-init-file :wk "Reload emacs config"))
 
-   (dt/leader-keys
-    "t" '(:ignore t :wk "Toggle")
-    "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
-    "t t" '(visual-line-mode :wk "Toggle truncated lines"))
-)
+     (dt/leader-keys
+      "t" '(:ignore t :wk "Toggle")
+      "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+      "t t" '(visual-line-mode :wk "Toggle truncated lines"))
+  )
 
 #+end_src
 
 
+
+* ORG MODE
+** Enabling Table of Contents
+#+begin_src emacs-lisp
+  (use-package toc-org
+      :commands toc-org-enable
+      :init (add-hook 'org-mode-hook 'toc-org-enable))
+#+end_src
+
+** Enabling Org Bullets
+Org-bullets gives us attractive bullets rather than asterisks.
+
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook 'org-indent-mode)
+  (use-package org-bullets)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+
+** Disable Electric Indent
+Org mode source blocks have some really weird and annoying default indentation behavior.  I think this has to do with electric-indent-mode, which is turned on by default in Emacs.  So let's turn it OFF!
+
+#+begin_src emacs-lisp
+(electric-indent-mode -1)
+#+end_src
+
+** Source Code Block Tag Expansion
+Org-tempo is not a separate package but a module within org that can be enabled.  Org-tempo allows for '<s' followed by TAB to expand to a begin_src tag.  Other expansions available include:
+
+| Typing the below + TAB | Expands to ...                          |
+|------------------------+-----------------------------------------|
+| <a                     | '#+BEGIN_EXPORT ascii' … '#+END_EXPORT  |
+| <c                     | '#+BEGIN_CENTER' … '#+END_CENTER'       |
+| <C                     | '#+BEGIN_COMMENT' … '#+END_COMMENT'     |
+| <e                     | '#+BEGIN_EXAMPLE' … '#+END_EXAMPLE'     |
+| <E                     | '#+BEGIN_EXPORT' … '#+END_EXPORT'       |
+| <h                     | '#+BEGIN_EXPORT html' … '#+END_EXPORT'  |
+| <l                     | '#+BEGIN_EXPORT latex' … '#+END_EXPORT' |
+| <q                     | '#+BEGIN_QUOTE' … '#+END_QUOTE'         |
+| <s                     | '#+BEGIN_SRC' … '#+END_SRC'             |
+| <v                     | '#+BEGIN_VERSE' … '#+END_VERSE'         |
+
+
+#+begin_src emacs-lisp 
+(require 'org-tempo)
+#+end_src

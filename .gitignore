@@ -2,6 +2,6 @@ auto-save-list
 .emacs.desktop
 .emacs.desktop.lock
 *~
-straight/
-straight/build-cache.el
 .gitignore.swp
+straight*
+history

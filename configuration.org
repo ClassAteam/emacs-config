@@ -66,6 +66,9 @@
 
   ;; Open in full-screen mode
   (toggle-frame-fullscreen)
+
+  ;;disable scroll bar
+  (scroll-bar-mode -1)
 #+END_SRC
 
 * Vertico around
@@ -148,11 +151,11 @@
     (dt/leader-keys
       "." '(find-file :wk "Find file")
       "f c" '((lambda () (interactive) (find-file "~/.emacs.d/configuration.org")) :wk "Edit emacs config")
-      "TAB TAB" '(comment-line :wk "Comment lines"))
+      "g c" '(comment-line :wk "Comment lines"))
 
     (dt/leader-keys
       "b" '(:ignore t :wk "buffer")
-      "b b" '(switch-to-buffer :wk "Switch buffer")
+      "SPC" '(switch-to-buffer :wk "Switch buffer")
       "b i" '(ibuffer :wk "Ibuffer")
       "b k" '(kill-this-buffer :wk "Kill this buffer")
       "b n" '(next-buffer :wk "Next buffer")

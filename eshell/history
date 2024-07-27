@@ -1,0 +1,23 @@
+ls
+cd ~/repo/
+ls
+cd ..
+ls
+mkdir builds
+cd builds/
+ls
+mkdir open-rti
+cd open-rti/
+cmake --version
+cmkae ~/repo/OpenRTI/
+cmake ~/repo/OpenRTI/
+clear
+mkdir builds
+clear
+clear
+clear
+clear
+clear
+clear
+Welcome to the Emacs shell clear
+clear
